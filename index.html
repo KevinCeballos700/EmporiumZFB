@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EmporiumZ – Loginl</title>
+
+  <!-- Fuentes y librerías externas -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">  
+
+</head>
+<body>
+  <!-- SPINNER -->
+  <div id="loading-spinner">Cargando…</div>
+ 
+  <!-- WRAPPER LOGIN -->
+  <div id="login-wrapper">
+    <header>
+      <h1 class="emporium-title">EmporiumZ</h1>
+    </header>
+    <div class="main-content">
+      <h1 id="page-title">Inicio de sesión</h1>
+
+      <div class="link-center register-link">
+        <a href="#" id="show-register">¿No tiene una cuenta? Créala aquí</a>
+      </div>
+
+      <div class="tab">
+        <button id="user-tab" class="active">Ingreso usuarios</button>
+        <button id="admin-tab">Ingreso administrativos</button>
+      </div>
+
+      <!-- USUARIO -->
+      <div id="user-login-form" class="form-section">
+        <form id="user-login-form-element">
+          <div class="form-group">
+            <label for="user-email-phone">Contacto (email o teléfono)</label>
+            <input type="text" id="user-email-phone" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <button type="button" id="send-code-btn">Enviar código</button>
+          </div>
+          <div class="form-group">
+            <label for="verification-code">Código (6 dígitos)</label>
+            <input type="text" id="verification-code" pattern="\d{6}" autocomplete="one-time-code">
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" autocomplete="current-password">
+          </div>
+          <div class="form-group">
+            <button type="submit">Ingresar</button>
+          </div>
+          <div class="link-center forgot-password-link">
+            <a href="#" id="show-forgot">¿Has olvidado tu contraseña?</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- ADMIN -->
+      <div id="admin-login-form" class="form-section" style="display:none">
+        <form id="admin-login-form-element">
+          <div class="form-group">
+            <label for="admin-user-id">ID de usuario</label>
+            <input type="text" id="admin-user-id" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="admin-password">Contraseña</label>
+            <input type="password" id="admin-password" autocomplete="current-password">
+          </div>
+            <div class="form-group">
+            <button type="submit">Ingresar</button>
+          </div>
+          <button type="button" class="btn-back">Volver</button>
+        </form>
+      </div>
+
+      <!-- REGISTRO -->
+      <div id="register-form" class="form-section" style="display:none">
+        <form id="register-form-element">
+          <div class="form-group">
+            <label for="full-name">Nombre completo</label>
+            <input type="text" id="full-name" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="reg-email-phone">Contacto (email o teléfono)</label>
+            <input type="text" id="reg-email-phone" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Contraseña</label>
+            <input type="password" id="reg-password" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <button type="submit">Continuar</button>
+          </div>
+          <button type="button" class="btn-back">Volver</button>
+        </form>
+      </div>
+
+      <!-- RECUPERAR CONTRASEÑA -->
+      <div id="forgot-password-form" class="form-section" style="display:none">
+        <form id="forgot-password-form-element">
+          <div class="form-group">
+            <label for="fp-email-phone">Contacto</label>
+            <input type="text" id="fp-email-phone" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <button type="button" id="send-recovery-btn">Enviar enlace de recuperación</button>
+          </div>
+          <button type="button" class="btn-back">Volver</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ================================= -->
+  <!-- WRAPPER USER-APP MENU USUARIO -->
+  <!-- ================================= -->
+  <div id="user-app" style="display: none;">
+   <header>
+      <!-- Título de la tienda -->
+      <div class="store-name">EmporiumZ</div>
+      <div class="menu-right">
+        <!-- Buscador -->
+        <div class="search-bar">
+          <input
+           type="text"
+           id="searchInput"
+           placeholder="Buscar productos..."
+          />
+          <div id="searchSuggestions" class="search-suggestions"></div>
+       </div>
+    
+        <!-- Iconos: carrito y perfil -->
+        <div class="icons">
+          <a href="#" id="cartIcon" title="Carrito">&#128722;</a>
+          <a href="#" id="profileIcon" title="Perfil">&#128100;</a>
+        </div>
+      </div>
+    </header>
+       <!-- Navbar -->
+     <nav>
+       <ul>
+         <li><a href="#" data-page="inicio">Inicio</a></li>
+         <li>
+            <a href="#" data-page="categorias">Categorías</a>
+            <div class="dropdown-content">…</div>
+          </li>
+          <li><a href="#" data-page="rastrear">Rastrear envío</a></li>
+          <li><a href="#" data-page="filtros">Filtros</a></li>
+          <li><a href="#" data-page="ayuda">Ayuda</a></li>
+        </ul>
+     </nav>
+  
+     <!-- Breadcrumb -->
+     <div class="breadcrumb">
+       <a href="#">Inicio</a>
+     </div>
+  
+     <!-- Contenido principal -->
+     <div class="content">
+       <!-- Vista home se mostrará inicialmente -->
+     </div>
+
+     <!-- Call to Action -->
+  
+  
+     <!-- Interfaz de rastreo de envíos -->
+     <div id="trackingContainer" class="tracking-container" style="display: none;">
+       <h2>Rastrear Envío</h2>
+       <input type="text" id="trackingNumber" placeholder="Por ejemplo: G-2477645">
+       <button id="trackButton">Rastrear</button>
+       <div id="trackingResult" style="margin-top: 20px;"></div>
+     </div>
+  
+     <!-- CART SIDEBAR (desplegable desde la derecha) -->
+     <div id="cartSidebar" class="cart-sidebar">
+       <span class="close-cart" id="closeCart">&times;</span>
+       <h1>Carrito de Compras</h1>
+       <table>
+         <thead>
+           <tr>
+             <th>Producto</th>
+             <th>Cant.</th>
+             <th>Precio</th>
+             <th>Subtotal</th>
+             <th>Quitar</th>
+           </tr>
+         </thead>
+         <tbody id="cartItems"> </tbody>
+       </table> 
+       <div class="cart-summary">
+         <strong>Total: $<span id="cartTotal">0</span></strong>
+       </div>
+       <button class="checkout-button">
+          Proceder a pagar
+        </button>
+     </div>
+  
+     <!-- INTERFASE DE CHECKOUT (inicialmente oculta) -->
+    <div id="checkoutContainer" class="checkout-container" style="display: none;">
+       <h1>Proceso de Pago</h1>
+
+       
+
+       <section class="checkout-section">
+         <h2>Dirección de entrega</h2>
+         <p id="addressInfo">No se ha configurado.</p>
+         <button id="configureAddress">Configurar dirección</button>
+       </section>
+
+       <section class="checkout-section">
+         <h2>Productos</h2>
+         <div id="checkoutItems"></div>
+       </section>
+
+       <section class="checkout-section">
+         <h2>Fecha de entrega estimada</h2>
+         <p>Su pedido llegará en 7 días a partir de la fecha de confirmación.</p>
+         <p id="estimatedDelivery"></p>
+       </section>
+
+       <section class="checkout-section">
+         <h2>Mensaje al vendedor</h2>
+         <textarea id="sellerMessage" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
+       </section>
+
+       <section class="checkout-section">
+         <h2>Opciones de pago</h2>
+         <label><input type="radio" name="payment" value="tarjeta" checked> Tarjeta de crédito/débito</label><br>
+         <label><input type="radio" name="payment" value="paypal"> PayPal</label><br>
+         <label><input type="radio" name="payment" value="transferencia"> Transferencia bancaria</label>
+       </section>
+
+       <div class="checkout-summary">
+         <p><strong>Total a pagar: $<span id="checkoutTotal">0</span></strong></p>
+       </div>
+       <button class="btn-pay" id="confirmPayBtn">Confirmar y pagar</button>
+     </div>
+
+     <!-- Overlay semitransparente bajo el carrito -->
+     <div id="cartOverlay" class="cart-overlay"></div>
+  
+     
+     <!-- Modal para el perfil -->
+     <div id="profileModal" class="modal">
+       <div class="modal-content">
+         <span class="close">&times;</span>
+         <h2>Datos del cliente</h2>
+         <p><strong>Nombre:</strong> </p>
+         <p><strong>Email:</strong> </p>
+         <p><strong>Teléfono:</strong> </p>
+         <p><strong>Dirección:</strong> </p>
+         <div id="profile-details"></div>
+       </div>
+     </div> 
+  </div>
+ 
+  
+
+
+
+  
+
+  <!-- ================================= -->
+  <!-- WRAPPER ADMIN-APP MENU -->
+  <!-- ================================= -->
+  <div id="admin-app" style="display:none;">
+    <!-- HEADER ADMINISTRADOR -->
+    <header>
+      <div class="store-name">EmporiumZ</div>
+      <div class="menu-right">
+        <!-- Buscador -->
+        <div class="search-bar">
+          <input
+           type="text"
+           id="searchInput"
+           placeholder="Buscar productos..."
+          />
+          <div id="searchSuggestions" class="search-suggestions"></div>
+       </div>
+        <!-- Dropdown Administrador en el header -->
+        <div class="admin-dropdown">
+          <span class="admin-title">Administrador &#9662;</span>
+          <ul class="admin-list">
+            <li id="gestionInventarios"><a href="#">Gestion de inventarios</a></li>
+            <li id="adminEnviosLi"><a href="#">Administracion de envios/logistica</a></li>
+            <li id="analisisReportes"><a href="#">Analisis y reportes</a></li>  
+            <li id="ofertasDescuentos"><a href="#">Ofertas y descuentos</a></li>
+            <li id="baseDatosClientes"><a href="#">Base de datos clientes</a></li>
+          </ul>
+        </div>
+        <!-- Iconos: carrito y perfil -->
+        <div class="icons">
+          <a href="#" id="cartIcon" title="Carrito">&#128722;</a>
+          <a href="#" id="profileIcon" title="Perfil">&#128100;</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAV PRINCIPAL (idéntico al usuario) -->
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#" data-page="inicio" class="nav-link">Inicio</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <a href="#" data-page="categorias" class="nav-link">Categorías</a>
+          <div class="dropdown-content">
+            <a href="#" data-page="zapatos" class="dropdown-link">Zapatos</a>
+            <a href="#" data-page="ropa" class="dropdown-link">Ropa</a>
+            <a href="#" data-page="electronica" class="dropdown-link">Electrónica</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="#" data-page="rastrear" class="nav-link">Rastrear envío</a></li>
+        <li class="nav-item"><a href="#" data-page="filtros" class="nav-link">Filtros</a></li>
+        <li class="nav-item"><a href="#" data-page="ayuda" class="nav-link">Ayuda</a></li>
+      </ul>
+   </nav>
+
+    <!-- Breadcrumb y contenido intactos -->
+    <div class="breadcrumb"><a href="#">Inicio</a></div>
+    <div class="content"></div>
+ </div>
+
+
+    <!-- Call to Action -->
+
+   <!-- === GESTIÓN DE INVENTARIOS === -->
+    <div id="gestionInventariosDiv" class="admin-section" style="display:none;">
+     <main class="inventory-management">
+        <!-- Botón para volver al menú principal -->
+        <button id="volverAlMenuPrincipalInv" class="btn-action" style="margin-bottom:20px;">
+          ← Volver al menú principal
+        </button>
+       <!-- 1) Dashboard de indicadores -->
+       <div class="inventory-dashboard">
+         <div class="card">
+           <h3>Productos Activos</h3>
+           <p id="invTotalProducts">0</p>
+         </div>
+         <div class="card">
+           <h3>Valor Total</h3>
+           <p id="invTotalValue">$0</p>
+         </div>
+         <div class="card">
+           <h3>Bajo Stock</h3>
+           <p id="invLowStock">0</p>
+         </div>
+         <div class="card">
+           <h3>Top 5 Mov.</h3>
+           <canvas id="inventoryChart" height="80"></canvas>
+         </div>
+       </div>
+
+       <!-- 2) Listado de productos -->
+       <section class="checkout-section">
+         <h2>Listado de Productos</h2>
+         <input id="invSearch" class="search-inventory" placeholder="🔍 Buscar SKU o nombre">
+         <table id="inventoryTable">
+           <thead>
+             <tr>
+               <th>SKU</th><th>Nombre</th><th>Stock</th><th>Reorden</th><th>Precio</th><th>Acciones</th>
+             </tr>
+           </thead>
+           <tbody></tbody>
+         </table>
+        </section>
+
+       <!-- 3) Ficha detallada en modal -->
+       <div id="invDetailModal" class="modal">
+         <div class="modal-content">
+           <span class="close" id="closeInvDetail">&times;</span>
+           <div id="invDetailBody"></div>
+         </div>
+       </div>
+
+       <!-- 4) Acciones masivas -->
+       <section class="checkout-section">
+         <button id="bulkReorder" class="btn-action">🛒 Crear Orden de Compra Masiva</button>
+         <button id="bulkAdjust" class="btn-action">✏️ Ajustar Stock Masivo</button>
+       </section>
+
+     </main>
+    </div>
+   <!-- === FIN GESTIÓN DE INVENTARIOS === -->
+
+
+
+  <div id="adminEnvios"        class="admin-section" style="display:none;">
+    <main>
+      <button id="volverAlMenuPrincipal">Volver al menú principal</button>
+      <!-- Sección fija: Gestión de pedidos y envíos -->
+      <section id="gestion-pedidos">
+        <h2>Gestión de pedidos y envíos</h2>
+        <!-- Buscador que filtra por número de guía -->
+        <input type="text" id="searchInput" placeholder="Buscar por número de guía..." onkeyup="searchTable()">
+        <table id="pedidosTable">
+          <thead>
+            <tr>
+              <th>Número de guía</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Contenido</th>
+              <th>Última actualización</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>G-1001</td>
+              <td>Juan Pérez</td>
+              <td>10/06/2025</td>
+              <td>Enviado</td>
+              <td>Electrónica</td>
+              <td>11:00 AM</td>
+            </tr>
+            <tr>
+              <td>G-1002</td>
+              <td>María Gómez</td>
+              <td>10/06/2025</td>
+              <td>En Proceso</td>
+              <td>Accesorios</td>
+              <td>10:30 AM</td>
+            </tr>
+            <tr>
+              <td>G-1003</td>
+              <td>Carlos Díaz</td>
+              <td>09/06/2025</td>
+              <td>Pendiente</td>
+              <td>Ropa</td>
+              <td>09:45 AM</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <!-- Acordeón para otras funcionalidades -->
+      <ul class="accordion">
+        <!-- Integración con transportadoras -->
+        <li class="accordion-item">
+          <div class="accordion-header">Integración con transportadoras</div>
+          <div class="accordion-content">
+            <p>Conecta y sincroniza con diversas transportadoras para optimizar costos y tiempos de envío.</p>
+            <ul>
+              <li><strong>Transportadora A:</strong> API - Clave API: ABC123</li>
+              <li><strong>Transportadora B:</strong> API - Clave API: XYZ789</li>
+              <li><strong>Transportadora C:</strong> API - Clave API: LMN456</li>
+            </ul>
+          </div>
+        </li>
+        
+        <!-- Optimización logística -->
+        <li class="accordion-item">
+          <div class="accordion-header">Optimización logística</div>
+          <div class="accordion-content">
+            <p>Planifica rutas y procesos para reducir tiempos y costos de entrega.</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Ruta</th>
+                  <th>Tiempo Estimado</th>
+                  <th>Distancia</th>
+                  <th>Estatus</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Ruta Norte</td>
+                  <td>45 min</td>
+                  <td>30 km</td>
+                  <td>En curso</td>
+                </tr>
+                <tr>
+                  <td>Ruta Sur</td>
+                  <td>60 min</td>
+                  <td>45 km</td>
+                  <td>Planificada</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+        
+        <!-- Gestión de devoluciones y reclamos -->
+        <li class="accordion-item">
+          <div class="accordion-header">Gestión de devoluciones y reclamos</div>
+          <div class="accordion-content">
+            <p>Administra incidencias, devoluciones y reclamos de pedidos realizados.</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID Devolución</th>
+                  <th>N° Pedido</th>
+                  <th>Motivo</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>D-001</td>
+                  <td>G-1001</td>
+                  <td>Producto defectuoso</td>
+                  <td>Procesando</td>
+                </tr>
+                <tr>
+                  <td>D-002</td>
+                  <td>G-1004</td>
+                  <td>Error en el envío</td>
+                  <td>Resuelto</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+        
+        <!-- Reportes e indicadores -->
+        <li class="accordion-item">
+          <div class="accordion-header">Reportes e indicadores</div>
+          <div class="accordion-content">
+            <p>Visualiza estadísticas clave que permitan evaluar el rendimiento logístico.</p>
+            <div class="card-container" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px;">
+              <div style="flex: 1; min-width: 220px; background-color: #e6f2ff; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; font-size: 1.1em; color: #004080;">Total de Envíos</h3>
+                <p>250</p>
+              </div>
+              <div style="flex: 1; min-width: 220px; background-color: #e6f2ff; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; font-size: 1.1em; color: #004080;">Pedidos Pendientes</h3>
+                <p>15</p>
+              </div>
+              <div style="flex: 1; min-width: 220px; background-color: #e6f2ff; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; font-size: 1.1em; color: #004080;">Satisfacción del Cliente</h3>
+                <p>92%</p>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </main>
+  </div>
+
+  
+  <!-- analisis y reportes -->
+  <div id="analisisReportesDiv" class="admin-section" style="display:none;">
+    <main>
+      <button id="volverAlMenuPrincipalAnalisis">Volver al menú principal</button>
+      <!-- Contenedor de pestañas: Dashboard, Alertas y Soporte en Decisiones -->
+      <div class="tabs">
+        <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-button" data-tab="alertas">Alertas y Seguimiento</button>
+        <button class="tab-button" data-tab="decisiones">Soporte en Decisiones</button>
+      </div>
+
+      <!-- Contenido de las pestañas -->
+      <div class="tab-content active" id="dashboard">
+        <h2>Dashboard</h2>
+
+        <!-- Indicadores clave -->
+        <section>
+          <h3>Indicadores Clave</h3>
+          <div class="cards">
+            <div class="card">
+              <h3>Ventas Totales</h3>
+              <p>$75,000</p>
+            </div>
+            <div class="card">
+              <h3>Pedidos Realizados</h3>
+              <p>320</p>
+            </div>
+            <div class="card">
+              <h3>Satisfacción Cliente</h3>
+              <p>95%</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Productos más vendidos -->
+        <section>
+          <h3>Productos Más Vendidos</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Marca</th>
+                <th>Ventas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Camiseta Deportiva</td>
+                <td>Nike</td>
+                <td>1500</td>
+              </tr>
+              <tr>
+                <td>Zapatos Running</td>
+                <td>Adidas</td>
+                <td>1200</td>
+              </tr>
+              <tr>
+                <td>Smartphone</td>
+                <td>Samsung</td>
+                <td>800</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Hora pico de ventas -->
+        <section>
+          <h3>Hora Pico de Ventas</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Número de Pedidos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10:00 - 11:00</td>
+                <td>50</td>
+              </tr>
+              <tr>
+                <td>14:00 - 15:00</td>
+                <td>65</td>
+              </tr>
+              <tr>
+                <td>20:00 - 21:00</td>
+                <td>80</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <div class="tab-content" id="alertas">
+        <h2>Alertas y Seguimiento Proactivo</h2>
+        <ul>
+          <li>Alerta: Incremento en devoluciones de productos electrónicos.</li>
+          <li>Alerta: Disminución del tráfico web en las últimas 24 horas.</li>
+          <li>Alerta: Bajo stock en artículos de moda.</li>
+        </ul>
+      </div>
+
+      <div class="tab-content" id="decisiones">
+        <h2>Soporte en la Toma de Decisiones</h2>
+        <p>Basado en el análisis de datos, se recomiendan las siguientes acciones:</p>
+        <ol>
+          <li>Optimizar promociones en categorías de alta demanda.</li>
+          <li>Incrementar campañas en redes sociales para mejorar el tráfico.</li>
+          <li>Negociar mejores condiciones con proveedores y transportadoras.</li>
+        </ol>
+      </div>
+
+    </main>
+  </div>
+  <!-- Fin del bloque agregado -->
+
+
+    
+
+  <!-- Agrega todo este bloque aquí -->
+  <div id="ofertasDescuentosDiv" class="admin-section" style="display:none;">
+    <div class="container">
+      <h1>Crear Promoción</h1>
+      <form id="formPromocion">
+        <!-- Campo de descuento -->
+        <div>
+          <label for="descuento">Descuento (%)</label>
+          <input type="number" id="descuento" name="descuento" min="0" max="100" placeholder="Escribe el porcentaje de descuento" required>
+        </div>
+        <!-- Campo para elegir producto -->
+        <div>
+          <label for="producto">Producto</label>
+          <select id="producto" name="producto" required>
+            <option value="">Seleccione un producto</option>
+            <option value="producto1">Producto 1</option>
+            <option value="producto2">Producto 2</option>
+            <option value="producto3">Producto 3</option>
+          </select>
+        </div>
+        <!-- Fecha de inicio -->
+        <div>
+          <label for="fechaInicio">Fecha de inicio</label>
+          <input type="date" id="fechaInicio" name="fechaInicio" required>
+        </div>
+        <!-- Fecha de fin -->
+        <div>
+          <label for="fechaFin">Fecha de fin</label>
+          <input type="date" id="fechaFin" name="fechaFin" required>
+        </div>
+        <!-- Botón para crear promoción -->
+        <button type="button" onclick="crearPromocion()">Crear Promoción</button>
+      </form>
+      <!-- Mensaje de resultado -->
+      <div id="mensaje"></div>
+      <button id="volverAlMenuPrincipalOfertas">Volver al menú principal</button>
+    </div>
+  </div>
+  <!-- Fin del bloque agregado -->
+
+
+   
+
+  <!-- Agrega todo este bloque aquí -->
+  <div id="baseDatosClientesDiv" class="admin-section" style="display:none;">
+    <header>
+      <h1>Base de Datos de Clientes</h1>
+    </header>
+    <div class="container">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar cliente por nombre, email, etc...">
+        <button class="export-btn" onclick="exportTableToCSV('clientes.csv')">Exportar a CSV</button>
+      </div>
+      <table id="clientesTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th onclick="sortTable(1)">Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th onclick="sortTable(5)">Fecha Registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Fila 1 -->
+          <tr data-id="1" data-nombre="Juan Pérez" data-email="juan.perez@mail.com" data-telefono="+57 300 1112222" data-direccion="Calle 123, Bogotá" data-fecha="2025-01-15">
+            <td data-label="ID">1</td>
+            <td data-label="Nombre">Juan Pérez</td>
+            <td data-label="Email">juan.perez@mail.com</td>
+            <td data-label="Teléfono">+57 300 1112222</td>
+            <td data-label="Dirección">Calle 123, Bogotá</td>
+            <td data-label="Fecha Registro">2025-01-15</td>
+            <td data-label="Acciones">
+              <button class="action-btn edit-btn" onclick="editClient(this)">Editar</button>
+              <button class="action-btn delete-btn" onclick="deleteClient(this)">Eliminar</button>
+            </td>
+          </tr>
+          <!-- Fila 2 -->
+          <tr data-id="2" data-nombre="María Gómez" data-email="maria.gomez@mail.com" data-telefono="+57 310 3334444" data-direccion="Carrera 45, Medellín" data-fecha="2025-02-20">
+            <td data-label="ID">2</td>
+            <td data-label="Nombre">María Gómez</td>
+            <td data-label="Email">maria.gomez@mail.com</td>
+            <td data-label="Teléfono">+57 310 3334444</td>
+            <td data-label="Dirección">Carrera 45, Medellín</td>
+            <td data-label="Fecha Registro">2025-02-20</td>
+            <td data-label="Acciones">
+              <button class="action-btn edit-btn" onclick="editClient(this)">Editar</button>
+              <button class="action-btn delete-btn" onclick="deleteClient(this)">Eliminar</button>
+            </td>
+          </tr>
+          <!-- Fila 3 -->
+          <tr data-id="3" data-nombre="Carlos Díaz" data-email="carlos.diaz@mail.com" data-telefono="+57 320 5556666" data-direccion="Avenida 78, Cali" data-fecha="2025-03-10">
+            <td data-label="ID">3</td>
+            <td data-label="Nombre">Carlos Díaz</td>
+            <td data-label="Email">carlos.diaz@mail.com</td>
+            <td data-label="Teléfono">+57 320 5556666</td>
+            <td data-label="Dirección">Avenida 78, Cali</td>
+            <td data-label="Fecha Registro">2025-03-10</td>
+            <td data-label="Acciones">
+              <button class="action-btn edit-btn" onclick="editClient(this)">Editar</button>
+              <button class="action-btn delete-btn" onclick="deleteClient(this)">Eliminar</button>
+            </td>
+          </tr>
+          <!-- Se pueden agregar más filas -->
+        </tbody>
+      </table>
+    </div>
+  
+  
+  <!-- Interfaz de rastreo de envíos -->
+  <div id="trackingContainer" class="tracking-container" style="display: none;">
+     <h2>Rastrear Envío</h2>
+     <input type="text" id="trackingNumber" placeholder="Por ejemplo: G-2477645">
+     <button id="trackButton">Rastrear</button>
+     <div id="trackingResult" style="margin-top: 20px;"></div>
+  </div>
+
+  <!-- CART SIDEBAR (desplegable desde la derecha) -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <span class="close-cart" id="closeCart">&times;</span>
+    <h1>Carrito de Compras</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>Precio</th>
+          <th>Subtotal</th>
+          <th>Quitar</th>
+        </tr>
+      </thead>
+      <tbody id="cartItems">
+        <!-- filas inyectadas dinámicamente --> 
+      </tbody>
+    </table>
+    <div class="cart-summary">
+      <strong>Total: $<span id="cartTotal">0</span></strong>
+    </div>
+    <button class="checkout-button" onclick="checkout()">Proceder a pagar</button>
+  </div>
+  
+  <!-- INTERFASE DE CHECKOUT (inicialmente oculta) -->
+  <div id="checkoutContainer" class="checkout-container" style="display: none;">
+    <h1>Proceso de Pago</h1>
+    <section class="checkout-section">
+      <h2>Dirección de entrega</h2>
+      <p id="addressInfo">No se ha configurado.</p>
+      <button id="configureAddress">Configurar dirección</button>
+    </section>
+    <section class="checkout-section">
+      <h2>Productos</h2>
+      <div class="product-item">
+        <img src="imagenes/zapatos.png" alt="Zapatos deportivos">
+        <div class="product-details">
+          <p><strong>Nombre:</strong> Zapatos deportivos</p>
+          <p><strong>Referencia:</strong> ZAP1234</p>
+          <p><strong>Precio:</strong> $150.000</p>
+        </div>
+      </div>
+    </section>
+    <section class="checkout-section">
+      <h2>Fecha de entrega estimada</h2>
+      <p>Su pedido llegará en 7 días a partir de la fecha de confirmación.</p>
+      <p id="estimatedDelivery"></p>
+    </section>
+    <section class="checkout-section">
+      <h2>Mensaje al vendedor</h2>
+      <textarea id="sellerMessage" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
+    </section>
+    <section class="checkout-section">
+      <h2>Opciones de pago</h2>
+      <label><input type="radio" name="payment" value="tarjeta" checked> Tarjeta de crédito/débito</label><br>
+      <label><input type="radio" name="payment" value="paypal"> PayPal</label><br>
+      <label><input type="radio" name="payment" value="transferencia"> Transferencia bancaria</label>
+    </section>
+    <div class="checkout-summary">
+      <p><strong>Total a pagar: $1.010.000</strong></p>
+    </div>
+    <button class="btn-pay" id="confirmPayBtn">Confirmar y pagar</button>
+  </div>
+
+  <!-- Overlay semitransparente bajo el carrito -->
+  <div id="cartOverlay"></div>
+  
+  <!-- Modal para el perfil -->
+  <div id="profileModal" class="modal">
+     <div class="modal-content">
+         <span class="close">&times;</span>
+         <h2>Datos del cliente</h2>
+          <p><strong>Nombre:</strong> </p>
+          <p><strong>Email:</strong> </p>
+          <p><strong>Teléfono:</strong></p>
+          <p><strong>Dirección:</strong> </p>
+        </div>
+    </div>
+    
+  </div>
+  </div>  
+
+  <!-- ======== SCRIPTS COMBINADOS ======== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/app.js"></script>
+
+
+
+
+
+</body>
+</html>
+
